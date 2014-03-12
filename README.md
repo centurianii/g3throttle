@@ -1,7 +1,7 @@
 g3throttle
 ==========
 <p>A throttle function that restricts it's external calls with the ability to pass arguments even if calls don't allow this!</p>
-<p>Moreover, we can pass the context that 'this' refers to inside the function!</p>
+<p>Moreover, we can pass the context that <code>this</code> refers to inside the function!</p>
 
 Usage
 =====
