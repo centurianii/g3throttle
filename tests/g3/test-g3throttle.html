@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset=utf-8>
+   <title>Evaluator: Test throttle pattern</title>
+   <meta name="description" content="Testing the observable object with g3evaluator project">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="author" content="centurianii at github">
+   <!-- my source files (g3), necessary libraries (jquery) and my tests folder (tests):
+      client
+        :
+        |-jquery
+        :  :
+        |-g3
+        :  |- <g3MyClass.js>
+        :  :
+        |-tests
+        :  |-jasmine-standalone-2.0.0
+           |  |-lib
+           |  |-spec
+           :  :
+           |-g3
+           :  |- <g3MyClass-SpecRunner.html>
+              |- <g3MyClass-Spec.js>
+              |- <g3MyClass-SpecHelper.js>
+              |- g3evaluator.css
+              |- g3evaluator.js
+              |- g3evaluator.html (rename this file to test-g3MyClass.html)
+              |- <test-g3MyClass.html>
+              :
+   -->
+   <link rel="stylesheet" type="text/css" href="g3evaluator.css">
+</head>
+<body>
+<div id="title"><h1 contenteditable="false">Evaluator: Test throttle pattern</h1><h1 contenteditable="false"><br></h1><span class="">[edit]</span></div><div id="stub" class=""></div><form id="loadFrame">
+<fieldset>
+   <legend class="hover"><b>Manage stub/frame</b></legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="frameSrc">Frame source:</label><input id="frameSrc" size="30" type="text"><br>
+   <input value="Load file in frame" type="button"><input value="Remove frame" type="button"><br>
+   <input value="Clone frame to stub-HEAD" type="button"><input value="Remove cloned" type="button">
+   </div>
+</fieldset>
+</form><form id="bodyHtml">
+<fieldset>
+   <legend class="hover"><b>Load body html (no &lt;script&gt;)</b></legend>
+   <div class="hide">
+   <textarea rows="5" wrap="virtual"></textarea><br>
+   <input value="Load" type="button"><input value="Clear" type="button"><br>
+   <label class="label" for="exclName">Exclude ids:</label><input id="exclName" size="30" type="text">
+   seperate by space or comma or semicolon or vertical bar: [ ,;|]
+   </div>
+</fieldset>
+</form><form id="addRemoveLib">
+<fieldset>
+   <legend class="hover">Add/Remove library</legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="libName">Script id:</label><input id="libName" size="30" type="text"><br>
+   <label class="label" for="libPath">Path:</label><input id="libPath" size="30" type="text"><br>
+   <input value="Add" type="button"><input value="Remove" type="button">
+   </div>
+</fieldset>
+</form><form id="libraries">
+<fieldset>
+   <legend>Load library</legend>
+<label class="label" for="Ao9A5">g3throttle</label><input id="Ao9A5" value="../../g3/g3throttle.js" type="checkbox"><br><label class="label" for="aR8FO">Ben Alman's throttle</label><input id="aR8FO" value="../../external-libs/benalman.throttle.debounce.js" type="checkbox"><br><label class="label" for="bef04">Underscore's throttle</label><input id="bef04" value="../../external-libs/_.throttle.js" type="checkbox"><br></fieldset></form><p><span><label class="label" for="boardHeights">Equal board heights:</label><input id="boardHeights" type="checkbox"></span></p><div id="boardWrapper">
+<form class="" id="blackboard">
+<fieldset>
+   <legend><b>Blackboard</b></legend>
+   <label class="label" for="title">Tab title:</label><input id="title" size="40" type="text"><br>
+   <textarea style="width: 100%;" rows="10" wrap="virtual"></textarea><br>
+   <input value="Execute!" type="button"><input disabled="" value="Save" type="button"><input value="Save to a new tab" type="button"><input value="Clear" type="button"><br>
+</fieldset>
+</form>
+<form class="" id="console">
+<fieldset>
+   <legend><b>Console</b></legend>
+   <div class="data"><pre></pre></div>
+   <input value="Clear" type="button">
+</fieldset>
+</form>
+</div><div class="clear clearBoardWrapper"></div><form id="addRemovePanel">
+<fieldset>
+   <legend class="hover">Add/Remove panel</legend>
+   <div style="display: block;" class="hide">
+   <label class="label" for="panelTitle">Panel title:</label><input id="panelTitle" size="30" type="text"><br>
+   <input value="Add" type="button"><input value="Remove" type="button">
+   </div>
+</fieldset>
+</form><hr><p><span style="padding: 0.4em 0.8em; color: #003380; background-color: #66a3ff;">Load any tab to blackboard</span><span><label class="label" for="panelHeights">Equal panel heights:</label><input id="panelHeights" type="checkbox"></span></p>
+<div id="tabbedDataWrapper">
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title">A repeatedly pushed function</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A normal pushed function from window setInterval()</div><div class="close">X</div></div></div>
+<div class="tabs"><div class="data"><pre>//A normal pushed function from window setInterval()
+
+function push(count){
+   if(!count) count = 0;
+   return function(){
+      console.log(++count+', elapsed: '+(new Date().getTime()-start));
+   };
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(push(0), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData height">
+<div class="titleBar"><p class="title enabled">g3throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A g3throttled pushed function</div><div class="close">X</div></div></div>
+<div class="tabs">
+<div class="data"><pre>//A g3throttled pushed function
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(g3.throttle(push, 2000, null, {x:0}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData height">
+<div class="titleBar"><p class="title">Ben Alman's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Ben Alman's throttled pushed function</div><div class="close">X</div></div></div>
+<div class="tabs"><div class="data"><pre>//A Ben Alman's throttled pushed function
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(Cowboy.throttle(2000, push), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData height">
+<div class="titleBar"><p class="title">Underscore's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Underscore's throttled pushed function</div><div class="close">X</div></div></div>
+<div class="tabs"><div class="data"><pre>//A Underscore's throttled pushed function
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(_.throttle(push, 2000), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.0.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="../../jquery/jquery-1.10.2.js"><\/script>')</script>
+<script src="../../g3/g3debug.js"></script>
+<script src="g3evaluator.js"></script>
+<script>
+$(function() {
+   g3.evaluator.getInstance();
+});
+</script>
+</body>
+</html>
