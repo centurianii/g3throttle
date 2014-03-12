@@ -5,7 +5,7 @@ g3throttle
 
 Usage
 =====
-<p>In place of a function name like <code>myFunction</code> pass <code>g3.throttle(myFunction, time[, this[, arg1, ...]])</code> and that's it!</p>
+<p>In place of a function name like <code>myFunction</code> pass <code>g3.throttle(myFunction, time[, context[, arg1, ...]])</code> where <code>context</code> is a reference pointed out by <code>this</code> and that's it!</p>
 <p>Now, your function won't be called more than every <code>time ms</code> and arguments <code>arg1, arg2, ...</code> have been passed already!</p>
 
 Dependencies
