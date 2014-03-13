@@ -82,15 +82,14 @@
 </div><div class="clear clearBoardWrapper"></div><form id="addRemovePanel">
 <fieldset>
    <legend class="hover">Add/Remove panel</legend>
-   <div style="display: block;" class="hide">
+   <div style="display: none;" class="hide">
    <label class="label" for="panelTitle">Panel title:</label><input id="panelTitle" size="30" type="text"><br>
    <input value="Add" type="button"><input value="Remove" type="button">
    </div>
 </fieldset>
-</form><hr><p><span style="padding: 0.4em 0.8em; color: #003380; background-color: #66a3ff;">Load any tab to blackboard</span><span><label class="label" for="panelHeights">Equal panel heights:</label><input id="panelHeights" type="checkbox"></span></p>
-<div id="tabbedDataWrapper">
+</form><hr><p><span style="padding: 0.4em 0.8em; color: #003380; background-color: #66a3ff;">Load any tab to blackboard</span><span><label class="label" for="panelHeights">Equal panel heights:</label><input id="panelHeights" type="checkbox"></span></p><div id="tabbedDataWrapper">
 <div class="gridTabbedData">
-<div class="tabbedData">
+<div class="tabbedData height">
 <div class="titleBar"><p class="title">A repeatedly pushed function</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A normal pushed function from window setInterval()</div><div class="close">X</div></div></div>
 <div class="tabs"><div class="data"><pre>//A normal pushed function from window setInterval()
 
@@ -121,9 +120,10 @@ setTimeout(clear(pid), 10000);
 </div>
 <div class="gridTabbedData">
 <div class="tabbedData height">
-<div class="titleBar"><p class="title enabled">g3throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A g3throttled pushed function</div><div class="close">X</div></div></div>
+<div class="titleBar"><p class="title enabled">g3throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A g3throttled pushed function: fires first &amp; last true</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A g3throttled pushed function: fires last false</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A g3throttled pushed function: fires first false</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A g3throttled pushed function: fires first &amp; last false</div><div class="close">X</div></div></div>
 <div class="tabs">
-<div class="data"><pre>//A g3throttled pushed function
+
+<div class="data"><pre>//A g3throttled pushed function: fires first &amp; last true
 
 function push(count){
    if(!count) count = {x:0};
@@ -133,7 +133,7 @@ function push(count){
 var start = new Date().getTime();
 console.log('started on: '+start);
 
-var pid = setInterval(g3.throttle(push, 2000, null, {x:0}), 1000);
+var pid = setInterval(g3.throttle(push, {delay: 2000}, {x:0}), 1000);
 
 function clear(pid){
    return function(){
@@ -144,14 +144,77 @@ function clear(pid){
 }
 
 setTimeout(clear(pid), 10000);
-</pre></div>
-</div>
+</pre></div><div class="data"><pre>//A g3throttled pushed function: fires last false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(g3.throttle(push, {delay: 2000, fireLast: false}, {x:0}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div><div class="data"><pre>//A g3throttled pushed function: fires first false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(g3.throttle(push, {delay: 2000, fireFirst: false}, {x:0}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div><div class="data"><pre>//A g3throttled pushed function: fires first &amp; last false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(g3.throttle(push, {delay: 2000, fireFirst: false, fireLast: false}, {x:0}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div></div>
 </div>
 </div>
 <div class="gridTabbedData">
 <div class="tabbedData height">
-<div class="titleBar"><p class="title">Ben Alman's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Ben Alman's throttled pushed function</div><div class="close">X</div></div></div>
-<div class="tabs"><div class="data"><pre>//A Ben Alman's throttled pushed function
+<div class="titleBar"><p class="title">Ben Alman's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Ben Alman's throttled pushed function: fires last true</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A Ben Alman's throttled pushed function: fires last false</div><div class="close">X</div></div></div>
+<div class="tabs">
+<div class="data"><pre>//A Ben Alman's throttled pushed function: fires last true
 
 function push(count){
    if(!count) count = {x:0};
@@ -172,14 +235,35 @@ function clear(pid){
 }
 
 setTimeout(clear(pid), 10000);
-</pre></div>
-</div>
+</pre></div><div class="data"><pre>//A Ben Alman's throttled pushed function: fires last false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(Cowboy.throttle(2000, true, push), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div></div>
 </div>
 </div>
 <div class="gridTabbedData">
 <div class="tabbedData height">
-<div class="titleBar"><p class="title">Underscore's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Underscore's throttled pushed function</div><div class="close">X</div></div></div>
-<div class="tabs"><div class="data"><pre>//A Underscore's throttled pushed function
+<div class="titleBar"><p class="title">Underscore's throttle</p><p class="load">Load tab</p></div><div class="tabs"><div class="tabBar"><div class="tab">A Underscore's throttled pushed function: fires first &amp; last true</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A Underscore's throttled pushed function: fires last false</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A Underscore's throttled pushed function: fires first false</div><div class="close">X</div></div><div class="tabBar"><div class="tab">A Underscore's throttled pushed function: fires first &amp; last false</div><div class="close">X</div></div></div>
+<div class="tabs">
+<div class="data"><pre>//A Underscore's throttled pushed function: fires first &amp; last true
 
 function push(count){
    if(!count) count = {x:0};
@@ -200,8 +284,70 @@ function clear(pid){
 }
 
 setTimeout(clear(pid), 10000);
-</pre></div>
-</div>
+</pre></div><div class="data"><pre>//A Underscore's throttled pushed function: fires last false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(_.throttle(push, 2000, {trailing: false}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div><div class="data"><pre>//A Underscore's throttled pushed function: fires first false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(_.throttle(push, 2000, {leading: false}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div><div class="data"><pre>//A Underscore's throttled pushed function: fires first &amp; last false
+
+function push(count){
+   if(!count) count = {x:0};
+   console.log(++count.x+', elapsed: '+(new Date().getTime()-start));
+}
+
+var start = new Date().getTime();
+console.log('started on: '+start);
+
+var pid = setInterval(_.throttle(push, 2000, {leading: false, trailing: false}), 1000);
+
+function clear(pid){
+   return function(){
+      var end = new Date().getTime();
+      console.log('ended on: '+end+', elapsed: '+(end-start)+'ms');
+      clearInterval(pid);
+   };
+}
+
+setTimeout(clear(pid), 10000);
+</pre></div></div>
 </div>
 </div>
 </div>
