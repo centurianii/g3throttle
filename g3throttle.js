@@ -7,24 +7,29 @@
  * @function {g3.throttle}
  * @public
  * @param {Function} 'func' is the function that eventually is been called.
- * @param {Integer} 'delay' is the minimum delay in milliseconds that we want 
- * this function to executes.
- * @param {Object} 'context' is the context under which the function will be 
- * executed. if it is omitted then the function is called as usual.
+ * @param {Object} An object consisting of properties as options
+ * - 'delay': (Number) is the minimum delay in milliseconds that we want this 
+ *      function to execute, 
+ * - 'context': (Object) is the context under which the function will be 
+ *      executed. if it is omitted then the function is called as usual,
+ * - 'fireFirst': (Boolean) if we want the first call to happen,
+ * - 'fireLast': (Boolean) if we want the last call to happen.
  * @return {Anything} Anything that the passed function returns.
  *
- * @version 0.1
+ * @version 0.2
  * @author Scripto JS Editor by Centurian Comet.
  * @copyright MIT licence.
  ******************************************************************************/
 (function(g3, $, window, document, undefined){
-   g3.throttle = function(func, delay, context, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9){
+   g3.throttle = function(func, options, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9){
       var state = {
          pid: null,
          last: 0
       };
       if(typeof func !== 'function')
          return null;
+      if(!options || (typeof options.delay !== 'number'))
+         return func;
       
       //usually 'callback()' is called without arguments, a.k.a event handler!
       //but, arguments do passed through the closure above!
@@ -33,21 +38,23 @@
       //Function.apply() imposes(!!)
       function callback(){
          var elapsed = new Date().getTime() - state.last;
-         var self = this;
          function exec(){
             state.last = new Date().getTime();
-            if((context === null) || (typeof context != "object"))
+            if(!options.context || (typeof options.context != 'object'))
                return func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
             else
-               return func.call(context, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
+               return func.call(options.context, arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
          }
          //execute immediately
-         if(elapsed > delay){
-            exec();
+         if(elapsed > options.delay){
+            if((state.last > 0) || (options.fireFirst !== false))
+               exec();
+            else
+               state.last = 1;
          //reset & re-schedule execution
-         }else{
+         }else if (options.fireLast !== false){
             clearTimeout(state.pid);
-            state.pid = setTimeout(exec, delay - elapsed);
+            state.pid = setTimeout(exec, options.delay - elapsed);
          }
       }
       
