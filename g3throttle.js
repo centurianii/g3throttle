@@ -12,8 +12,10 @@
  *      function to execute, 
  * - 'context': (Object) is the context under which the function will be 
  *      executed. if it is omitted then the function is called as usual,
- * - 'fireFirst': (Boolean) if we want the first call to happen,
- * - 'fireLast': (Boolean) if we want the last call to happen.
+ * - 'fireFirst': (Boolean) if we want the first call to happen and then after 
+ *      'delay' ms, defaults to true,
+ * - 'fireLast': (Boolean) if we want the last call to happen 'delay' ms after
+ *      the last call, defaults to true.
  * @return {Anything} Anything that the passed function returns.
  *
  * @version 0.2
@@ -30,6 +32,12 @@
          return null;
       if(!options || (typeof options.delay !== 'number'))
          return func;
+      //default options.fireFirst
+      if(typeof options.fireFirst === 'undefined')
+         options.fireFirst = true;
+      //default options.fireLast
+      if(typeof options.fireLast === 'undefined')
+         options.fireLast = true;
       
       //usually 'callback()' is called without arguments, a.k.a event handler!
       //but, arguments do passed through the closure above!
@@ -47,12 +55,12 @@
          }
          //execute immediately
          if(elapsed > options.delay){
-            if((state.last > 0) || (options.fireFirst !== false))
+            if((state.last > 0) || (options.fireFirst === true))
                exec();
             else
                state.last = 1;
          //reset & re-schedule execution
-         }else if (options.fireLast !== false){
+         }else if (options.fireLast === true){
             clearTimeout(state.pid);
             state.pid = setTimeout(exec, options.delay - elapsed);
          }
