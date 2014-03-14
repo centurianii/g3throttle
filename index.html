@@ -441,7 +441,7 @@ function push(count){
 var start = new Date().getTime();
 console.log('started on: '+start);
 
-var pid = setInterval(underscore.throttle(push, 2000), 1000);
+var pid = setInterval(_.throttle(push, 2000), 1000);
 
 function clear(pid){
    return function(){
@@ -470,7 +470,7 @@ function clear(pid){
 var start = new Date().getTime();
 console.log('started on: '+start);
 
-var pid = setInterval(underscore.throttle(push, 2000, {trailing: false}), 1000);
+var pid = setInterval(_.throttle(push, 2000, {trailing: false}), 1000);
 setTimeout(clear(pid), 10000);
 </pre></div><div class="data"><pre>//A Underscore's throttled pushed function: fires first false
 
@@ -490,7 +490,7 @@ function clear(pid){
 var start = new Date().getTime();
 console.log('started on: '+start);
 
-var pid = setInterval(underscore.throttle(push, 2000, {leading: false}), 1000);
+var pid = setInterval(_.throttle(push, 2000, {leading: false}), 1000);
 setTimeout(clear(pid), 10000);
 </pre></div><div class="data"><pre>//A Underscore's throttled pushed function: fires first &amp; last false
 
@@ -510,7 +510,7 @@ function clear(pid){
 var start = new Date().getTime();
 console.log('started on: '+start);
 
-var pid = setInterval(underscore.throttle(push, 2000, {leading: false, trailing: false}), 1000);
+var pid = setInterval(_.throttle(push, 2000, {leading: false, trailing: false}), 1000);
 setTimeout(clear(pid), 10000);
 </pre></div></div>
 </div>
